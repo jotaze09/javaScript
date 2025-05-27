@@ -1,0 +1,65 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercício 3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 80px;
+            background-color: #f0f4f8;
+        }
+
+        #destaque {
+            font-size: 18px;
+            padding: 15px 20px;
+            background-color: #ffffff;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <p id="destaque">Texto em destaque.</p>
+    <br>
+    <button onclick="estilizarParagrafo()">Estilizar</button>
+
+    <script>
+        function estilizarParagrafo() {
+            const paragrafo = document.getElementById('destaque');
+            paragrafo.style.color = '#00FFFF';
+            paragrafo.style.fontFamily = 'Courier New, monospace';
+            const paragrafooo = document.getElementById('destaque');
+              paragrafooo.style.backgroundColor = 'black';
+
+            
+           const body = document.getElementsByTagName('body')[0];
+           body.style.backgroundColor = 'black';
+        }
+    </script>
+</body>
+</html>
