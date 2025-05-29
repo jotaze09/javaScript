@@ -1,0 +1,252 @@
+<!-- <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercício 1: Sistema de Reações</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .post {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .post img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .curtidas {
+      margin-top: 15px;
+      font-size: 18px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .fa-thumbs-up {
+        color: green;
+    }
+
+    .fa-thumbs-down {
+        color: red;
+    }
+
+    .fa-star {
+        color: rgb(233, 233, 43);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #btn-like {
+      
+      background-color: rgb(0, 184, 0);
+    }
+
+    #btn-like:hover {
+      background-color: green;
+    }
+
+    #btn-dislike {
+      background-color: red;
+    }
+
+    #btn-dislike:hover {
+      background-color: rgb(202, 0, 0);
+    }
+
+    #btn-favorite {
+      background-color: orange;
+    }
+
+    #btn-favorite:hover {
+      background-color: rgb(194, 126, 0);
+    }
+
+    #btn-limpar {
+      background-color: blue;
+    }
+
+    #btn-limpar:hover {
+      background-color: rgb(0, 0, 196);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="post">
+    <img src="https://picsum.photos/400/200" alt="Imagem do post">
+    <div class="curtidas">
+        <p><i class="fa-regular fa-thumbs-up"></i>: <span id="contador-like">0</span></p>
+        <p><i class="fa-regular fa-thumbs-down"></i>: <span id="contador-dislike">0</span></p>
+        <p><i class="fa-regular fa-star"></i>: <span id="contador-favoritos">0</span></p>
+    </div>
+    <button id="btn-like">Gostei</button>
+    <button id="btn-dislike">Não gostei</button>
+    <button id="btn-favorite">Favoritar</button>
+    <button id="btn-limpar">Limpar</button>
+  </div>
+
+  <script>
+    const nmrLike = document.getElementById ("contador-like");
+    const nmrDesLike = document.getElementById ("contador-dislike");
+    const nmrFavorito = document.getElementById ("contador-favoritos");
+
+    const gostei = document.getElementById ("btn-like");
+    const deslike = document.getElementById ("btn-dislike");
+    const fav = document.getElementById ("btn-favorite");
+    const limpar = document.getElementById("btn-limpar");
+
+    gostei.addEventListener ("click", ()=> {
+        let contador = parseInt(nmrLike.textContent)
+        nmrLike.textContent = contador +1
+    });
+
+    deslike.addEventListener ("click", ()=> {
+        let contador = parseInt(nmrDesLike.textContent)
+        nmrDesLike.textContent = contador +1
+    });
+    fav.addEventListener ("click", ()=> {
+        let contador = parseInt(nmrFavorito.textContent)
+        nmrFavorito.textContent = contador +1
+    })
+
+
+    limpar.addEventListener("click", ()=>{
+        nmrDesLike.innerText = 0
+        nmrFavorito.innerText = 0
+        nmrLike.innerText = 0
+    })
+
+  </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Exercício: Filtro de Produtos Avançado</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f1f1f1;
+        padding: 40px;
+        text-align: center;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+        text-align: left;
+      }
+
+      li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        transition: all 0.3s ease;
+      }
+
+      li.hidden {
+        display: none;
+      }
+
+      li.highlight {
+        background-color: #d2f8da;
+        border-left: 5px solid #4caf50;
+      }
+
+      #contador {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      #mensagem-erro {
+        display: none;
+        margin-top: 20px;
+        color: red;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Buscar Produtos</h2>
+      <input type="text" id="campoBusca" placeholder="Digite para buscar..." />
+
+      <p id="contador"></p>
+      <p id="mensagem-erro">Nenhum produto encontrado.</p>
+
+      <ul id="listaProdutos">
+        <li>Notebook</li>
+        <li>Smartphone</li>
+        <li>Fone de Ouvido</li>
+        <li>Carregador</li>
+        <li>Mouse</li>
+        <li>Teclado</li>
+        <li>Monitor</li>
+      </ul>
+    </div>
+
+    <script>
+      const busca = document.getElementById ("campoBusca");
+      const itens = document.querySelectorAll ("li");
+
+        busca.addEventListener ("keyup", ()=>{
+            const termo = busca.value.toLowerCase();
+
+            itens.forEach(item => {
+                const iten = item.textContent.toLowerCase()
+                if (iten.includes(termo)) {
+                    item.classList.remove("hidden");
+                    item.classList.add("highlight");
+                }
+                 else {
+                    item.classList.add("hidden");
+                }
+
+                if (termo === "") {
+                    item.classList.remove("highlight");
+                }
+                
+            });
+        });
+    </script>
+  </body>
+</html>
