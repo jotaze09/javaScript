@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buscar Usuário GitHub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eaecef;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      color: #333;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 300px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #0366d6;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #024a9c;
+    }
+
+    .resultado {
+      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 350px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .erro {
+      margin-top: 20px;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Buscar Usuário do GitHub</h1>
+  <input type="text" id="username" placeholder="Digite o nome do usuário GitHub" />
+  <button id="buscarBtn">Buscar</button>
+
+  <div id="resultado" class="resultado" style="display:none;"></div>
+  <div id="erro" class="erro"></div>
+
+  <script>
+  const buscarBtn = document.getElementById('buscarBtn');
+  const usernameInput = document.getElementById('username');
+  const resultadoDiv = document.getElementById('resultado');
+  const erroDiv = document.getElementById('erro');
+
+  function buscarUsuario() {
+    const username = usernameInput.value.trim();
+    resultadoDiv.style.display = 'none';
+    resultadoDiv.innerHTML = '';
+    erroDiv.textContent = '';
+
+    if (!username) {
+      erroDiv.textContent = 'Por favor, digite um nome de usuário.';
+      return;
+    }
+
+    resultadoDiv.innerHTML = 'Carregando...';
+    resultadoDiv.style.display = 'block';
+
+    fetch(`https://api.github.com/users/${username}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Usuário não encontrado');
+        }
+        return response.json();
+      })
+      .then(data => {
+        resultadoDiv.innerHTML = `
+          <img src="${data.avatar_url}" alt="Avatar" style="width:80px;height:80px;border-radius:50%;margin-bottom:10px;" />
+          <p><strong>Nome:</strong> ${data.name || 'Não disponível'}</p>
+          <p><strong>Login:</strong> ${data.login}</p>
+          <p><strong>Repositórios públicos:</strong> ${data.public_repos}</p>
+          <p><strong>Perfil:</strong> <a href="${data.html_url}" target="_blank">${data.html_url}</a></p>
+        `;
+      })
+      .catch(error => {
+        resultadoDiv.style.display = 'none';
+        erroDiv.textContent = error.message;
+      });
+  }
+
+  buscarBtn.addEventListener('click', buscarUsuario);
+  usernameInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') buscarUsuario();
+  });
+</script>
+
+</body>
+</html>
+
