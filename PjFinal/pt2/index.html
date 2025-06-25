@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Compras Pokémon</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button id="toggleTheme" class="theme-toggle">Alterar Tema</button>
+
+  <h1>Pokémons para Lista de Compras</h1>
+  <div id="pokemon-cards" class="pokemon-grid"></div>
+
+  <h2>Lista de Compras</h2>
+  <div class="filters">
+    <label for="filterStatus">Filtrar por Status:</label>
+    <select id="filterStatus">
+      <option value="all">Todos</option>
+      <option value="Pendente">Pendentes</option>
+      <option value="Comprado">Comprados</option>
+    </select>
+  </div>
+
+  <div class="counter" id="counter"></div>
+  <div id="shopping-list"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
