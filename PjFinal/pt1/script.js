@@ -65,4 +65,4 @@ function excluir(id) {
   mostrarLista();
 }
 
-mostrarLista();
+document.addEventListener('DOMContentLoaded', mostrarLista);
