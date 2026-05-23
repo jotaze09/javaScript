@@ -5,12 +5,8 @@
    O email é reconstruído dinamicamente em runtime.
 ================================================================ */
 (function(){
-  // Email ofuscado: dividido em partes e reconstruído só na hora do login
   const _e = [106,108,50,55,53,48,49,48,64,103,109,97,105,108,46,99,111,109];
-  // Hash SHA-256 da senha "pilpil1234" (gerado em runtime na primeira execução)
-  // armazenamos como array de bytes para nunca aparecer como string legível
   const _h = [98,102,55,102,99,102,99,100,51,98,49,55,53,50,51,57,51,53,49,57,54,102,48,50,53,97,49,99,98,56,53,97,50,97,53,97,53,56,50,50,50,101,52,57,56,57,99,100,54,99,101,49,51,51,53,101,100,52,101,98,53,51,55,49];
-  // ^ hash SHA-256 (verificado em runtime)
   
   window.__SEC = {
     getEmail: function(){ return _e.map(function(c){ return String.fromCharCode(c); }).join(''); },
