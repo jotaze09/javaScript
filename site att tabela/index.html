@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabela de Futebol Escolar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- MODAL DE LOGIN -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <div class="login-title">INTERCLASSE SESI 2026</div>
+    <div class="login-sub">Acesso ao Sistema</div>
+    <div class="login-form">
+      <div class="login-field">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="loginEmail" placeholder="E-mail" autocomplete="email" value="jl275010@gmail.com">
+      </div>
+      <div class="login-field">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="loginPassword" placeholder="Senha" autocomplete="current-password">
+      </div>
+      <div class="login-error" id="loginError">E-mail ou senha incorretos!</div>
+      <button class="login-btn" id="loginBtn" onclick="fazerLogin()">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+      </button>
+      <button class="login-btn login-btn-viewer" onclick="entrarComoVisitante()">
+        <i class="fa-solid fa-eye"></i> Entrar como Visitante
+      </button>
+    </div>
+    <div class="login-footer">
+      Visitante: apenas visualização<br>
+      Admin: acesso completo para edição
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMAÇÃO -->
+<div class="modal-overlay" id="modalConfirm">
+  <div class="modal-box">
+    <p id="modalMsg">Tem certeza que deseja excluir?</p>
+    <div class="btns">
+      <button class="btn-yes" id="modalYes">Sim, excluir</button>
+      <button class="btn-no" id="modalNo">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AJUSTE DE FOTO -->
+<div class="modal-overlay" id="modalAjusteFoto">
+  <div class="modal-box" style="max-width:500px;">
+    <h3 style="margin-bottom:16px;color:var(--neon)">Ajustar Foto do Time</h3>
+    <div style="display:flex;gap:20px;align-items:center;justify-content:center;margin-bottom:16px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div id="ajusteContainer" style="width:200px;height:200px;border:2px solid var(--neon-dark);border-radius:8px;overflow:hidden;position:relative;cursor:move;background:var(--bg-card);">
+          <img id="ajusteImagem" src="" style="width:100%;height:100%;object-fit:contain;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+        </div>
+        <span style="font-size:0.7rem;color:var(--text-sec)">Arraste para mover</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div id="previewContainer" style="width:80px;height:80px;border-radius:50%;overflow:hidden;border:2px solid var(--neon-dark);background:var(--bg-card);">
+          <img id="previewImagem" src="" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <span style="font-size:0.7rem;color:var(--text-sec)">Preview</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:0.8rem;color:var(--text-sec);min-width:40px;">Zoom:</span>
+        <input type="range" id="zoomSlider" min="0.5" max="3" step="0.1" value="1" style="flex:1;">
+        <span id="zoomValue" style="font-size:0.8rem;color:var(--text);min-width:30px;">1.0x</span>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;">
+        <button onclick="resetarAjuste()" style="background:var(--neon-dark);color:var(--text);border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.8rem;">
+          <i class="fa-solid fa-rotate-left"></i> Resetar
+        </button>
+      </div>
+    </div>
+    <div class="btns">
+      <button class="btn-yes" onclick="confirmarAjusteFoto()">Confirmar</button>
+      <button class="btn-no" onclick="cancelarAjusteFoto()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-area">
+    <div class="logo-title" id="campeonatoNome">COPA ESCOLAR 2026</div>
+    <button class="hamburger" id="hamburguer" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <nav class="nav-tabs" id="navTabs">
+      <button class="nav-tab" data-tab="classificacao"><i class="fa-solid fa-table-list"></i> <span class="nav-tab-text">Classificação</span></button>
+      <button class="nav-tab active" data-tab="partidas"><i class="fa-solid fa-futbol"></i> <span class="nav-tab-text">Partidas</span></button>
+      <button class="nav-tab" data-tab="times"><i class="fa-solid fa-users"></i> <span class="nav-tab-text">Times</span></button>
+      <button class="nav-tab" data-tab="temas"><i class="fa-solid fa-palette"></i> <span class="nav-tab-text">Temas</span></button>
+    </nav>
+    <button class="login-status-btn" id="loginStatusBtn" onclick="mostrarTelaLogin()" title="Clique para trocar de usuário">
+      <i class="fa-solid fa-user-shield"></i>
+      <span id="loginStatusText">Admin</span>
+    </button>
+  </div>
+</header>
+
+<main class="main" id="mainContent">
+
+  <!-- ===== ABA CLASSIFICAÇÃO ===== -->
+  <div class="section" id="sec-classificacao">
+    <div class="dashboard" id="dashboard">
+      <div class="dash-card">
+        <div class="icon">⚽</div><div class="label">Total de Gols</div>
+        <div class="value" id="dashGols">0</div>
+      </div>
+      <div class="dash-card">
+        <div class="icon">🏟️</div><div class="label">Partidas Realizadas</div>
+        <div class="value" id="dashPartidas">0</div>
+      </div>
+      <div class="dash-card">
+        <div class="icon">🟨</div><div class="label">Cartões Amarelos</div>
+        <div class="value" id="dashAmarelos">0</div>
+      </div>
+      <div class="dash-card">
+        <div class="icon">🟥</div><div class="label">Cartões Vermelhos</div>
+        <div class="value" id="dashVermelhos">0</div>
+      </div>
+      <div class="dash-card">
+        <div class="icon">🏅</div><div class="label">Time Líder</div>
+        <div class="value" id="dashLider" style="font-size:.8rem">-</div>
+      </div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-trophy"></i> Tabela de Classificação</div>
+
+    <div class="info-box" style="background:rgba(0,255,136,.06);border-color:rgba(0,255,136,.2);margin-bottom:8px">
+      <i class="fa-solid fa-rotate" style="color:var(--green)"></i>
+      <strong style="color:var(--green)">Auto-atualização ativa:</strong>&nbsp;
+      a classificação é recalculada automaticamente ao salvar resultados das partidas encerradas.
+    </div>
+
+    <div class="legenda">
+      <div class="legenda-item"><div class="legenda-cor" style="background:var(--green)"></div><span style="color:var(--text-sec)">Zona de Classificação</span></div>
+      <div class="legenda-item"><div class="legenda-cor" style="background:var(--yellow)"></div><span style="color:var(--text-sec)">Zona Intermediária</span></div>
+      <div class="legenda-item"><div class="legenda-cor" style="background:var(--red)"></div><span style="color:var(--text-sec)">Zona de Rebaixamento</span></div>
+    </div>
+
+    <div class="info-box">
+      <i class="fa-solid fa-circle-info" style="color:var(--accent)"></i>
+      Pontuação FIFA: <strong style="color:var(--green)">Vitória = 3 pts</strong> &nbsp;|&nbsp;
+      <strong style="color:var(--yellow)">Empate = 1 pt</strong> &nbsp;|&nbsp;
+      <strong style="color:var(--red)">Derrota = 0 pts</strong> &nbsp;|&nbsp;
+      Desempate: Pts → SG → GM → V
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>🏅</th><th style="text-align:left">Time</th>
+            <th title="Jogos">J</th><th title="Vitórias">V</th><th title="Empates">E</th>
+            <th title="Derrotas">D</th><th title="Gols Marcados">GM</th><th title="Gols Sofridos">GS</th>
+            <th title="Saldo de Gols">SG</th>
+            <th title="Pontos" style="color:#ffd700">PTS</th>
+            <th title="Últimos 5 jogos">Últimos 5</th>
+          </tr>
+        </thead>
+        <tbody id="bodyClassificacao"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== ABA PARTIDAS ===== -->
+  <div class="section active" id="sec-partidas">
+    <div class="partidas-topbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+      <div class="section-title" style="margin:0;"><i class="fa-solid fa-futbol"></i> Partidas do Torneio</div>
+      <div class="partidas-actions" style="display:flex;gap:8px;align-items:center;">
+        <div class="format-toggle" style="display:flex;background:var(--bg-card);border:1px solid var(--neon-dark);border-radius:8px;overflow:hidden;">
+          <button class="format-btn" id="formatGrid" onclick="setPartidaFormat('grid')" title="Formato Grade">
+            <i class="fa-solid fa-grip"></i>
+          </button>
+          <button class="format-btn" id="formatList" onclick="setPartidaFormat('list')" title="Formato Linha">
+            <i class="fa-solid fa-list"></i>
+          </button>
+        </div>
+        <button class="btn-add" style="margin:0" onclick="addPartida()"><i class="fa-solid fa-plus"></i> Adicionar Partida</button>
+      </div>
+    </div>
+
+    <div id="listaPartidas"></div>
+
+    <button class="btn-add btn-add-bottom" onclick="addPartida()"><i class="fa-solid fa-plus"></i> Adicionar Partida</button>
+  </div>
+
+  <!-- ===== ABA TEMAS ===== -->
+  <div class="section" id="sec-temas">
+    <div class="section-title"><i class="fa-solid fa-palette"></i> Temas Visuais</div>
+    <p style="font-size:.78rem;color:var(--text-sec);margin-bottom:20px">
+      Escolha o tema que melhor combina com o seu evento. O tema é salvo automaticamente.
+    </p>
+
+    <div style="margin-bottom:24px;padding:16px;background:var(--bg-card);border:1px solid var(--neon-dark);border-radius:12px;">
+      <div style="font-family:'Orbitron',sans-serif;font-size:.85rem;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+        <i class="fa-solid fa-text-height"></i> Tamanho da Fonte
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button onclick="aplicarTamanhoFonte('normal')" id="btn-font-normal" class="font-size-btn" style="flex:1;min-width:80px;padding:8px 12px;border:1px solid var(--neon-dark);background:transparent;color:var(--text);border-radius:6px;cursor:pointer;transition:all .3s;font-family:'Orbitron',sans-serif;font-size:.7rem;">
+          Normal
+        </button>
+        <button onclick="aplicarTamanhoFonte('grande')" id="btn-font-grande" class="font-size-btn" style="flex:1;min-width:80px;padding:8px 12px;border:1px solid var(--neon-dark);background:transparent;color:var(--text);border-radius:6px;cursor:pointer;transition:all .3s;font-family:'Orbitron',sans-serif;font-size:.85rem;">
+          Grande
+        </button>
+        <button onclick="aplicarTamanhoFonte('gigante')" id="btn-font-gigante" class="font-size-btn" style="flex:1;min-width:80px;padding:8px 12px;border:1px solid var(--neon-dark);background:transparent;color:var(--text);border-radius:6px;cursor:pointer;transition:all .3s;font-family:'Orbitron',sans-serif;font-size:1rem;">
+          Gigante
+        </button>
+      </div>
+    </div>
+
+    <div class="themes-grid" id="themesGrid"></div>
+
+    <div class="admin-only-block" style="margin-top:32px;padding-top:20px;border-top:1px solid var(--neon-dark);">
+      <div class="info-box" style="background:rgba(255,0,60,.06);border-color:rgba(255,0,60,.2);margin-bottom:16px">
+        <i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i>
+        <strong style="color:var(--red)">Zona de Perigo:</strong>&nbsp;
+        Esta ação apagará todos os dados (times, partidas, classificações) mas manterá seu tema escolhido.
+      </div>
+      <button onclick="resetarDados()" style="background:var(--red);color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;gap:8px;transition:all 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        <i class="fa-solid fa-trash-can"></i> Resetar Todos os Dados
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== ABA TIMES ===== -->
+  <div class="section" id="sec-times">
+    <div class="section-title"><i class="fa-solid fa-users"></i> Estatísticas por Time</div>
+
+    <div class="info-box" style="background:rgba(0,191,255,.06);border-color:rgba(0,191,255,.2);margin-bottom:16px">
+      <i class="fa-solid fa-chart-line" style="color:var(--blue)"></i>
+      <strong style="color:var(--blue)">Estatísticas Acumuladas:</strong>&nbsp;
+      Visualize o desempenho de cada time em todas as partidas jogadas.
+    </div>
+
+    <div class="times-topbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <p style="font-size:.78rem;color:var(--text-sec);margin:0">
+        Adicione times manualmente ou crie partidas para gerar times automaticamente.
+      </p>
+      <button class="btn-add" onclick="addTime()"><i class="fa-solid fa-plus"></i> Adicionar Time</button>
+    </div>
+
+    <div id="timesContainer"></div>
+  </div>
+
+</main>
+
+<script src="script.js"></script>
+
+<div class="dev-credit" style="position:fixed;bottom:8px;left:8px;color:var(--text-sec);font-family:'Orbitron',sans-serif;opacity:.6;z-index:1000">
+  DEV: JOTAZE
+</div>
+
+</body>
+</html>
